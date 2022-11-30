@@ -1,7 +1,11 @@
 #!/usr/bin/python3
-import requests, sys
+import requests, sys, re
 from sgfmill import sgf
 players_info = ('PB', 'BR', 'PW', 'WR')
+id_re = re.compile('sgfid=(\d+)')
+
+def get_sgfid(url):
+    return id_re.search(url).groups()[0]
 
 def get_sgf(sgfid:int):
     r = requests.get('https://getsgf.99weiqi.com/wxsgf.aspx?index={}'.format(sgfid))
@@ -25,7 +29,10 @@ def get_players(game):
 
 if __name__ == '__main__':
     assert sys.argv[1], "You didn't add any sgfid as argument."
-    sgfid = int(sys.argv[1])
+    try:
+        sgfid = int(sys.argv[1])
+    except ValueError:
+        sgfid = get_sgfid(sys.argv[1])
     sgf_str = get_sgf(sgfid)
     game = modify_sgf(sgf_str)
     players = get_players(game)
