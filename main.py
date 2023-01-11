@@ -24,7 +24,7 @@ def get_sgfid(url):
 def get_sgf(sgfid:int):
     r = requests.get('https://getsgf.99weiqi.com/wxsgf.aspx?index={}'.format(sgfid), timeout=5)
     sgf_bin = r.content
-    sgf_bin = sgf_bin[sgf_bin.find(b'('):]
+    sgf_bin = sgf_bin[sgf_bin.find(b'(;'):]
     return sgf_bin.decode()
 
 
