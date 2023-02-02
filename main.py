@@ -3,6 +3,7 @@ import requests, sys, re
 from sgfmill import sgf
 players_info = ('PB', 'BR', 'PW', 'WR')
 id_re = re.compile('sgfid=(\d+)')
+km_re = re.compile('KM\[(.*?)\]')
 
 
 def error_func(error_code):
@@ -30,8 +31,12 @@ def get_sgf(sgfid:int):
 
 def modify_sgf(sgf_str):
     game = sgf.Sgf_game.from_string(sgf_str)
-    if game.get_size() in [13, 19]:
+    km = km_re.search(sgf_str).groups()[0]
+
+    if km == '分先 黑贴3又3/4子':
         game.get_root().set('KM', '7.5')
+    elif km == '让先':
+        game.get_root().set('KM', '0')
     return game
 
 
